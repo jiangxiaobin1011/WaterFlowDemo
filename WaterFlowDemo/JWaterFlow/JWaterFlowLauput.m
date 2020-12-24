@@ -117,8 +117,13 @@ static const UIEdgeInsets JDefaultCellEdgInset = {10, 10, 10, 10};
         
         //如果代理中实现了头部视图的方法，则代表存在头部视图，那么需要把headerview的attrs也添加进数组
         if([self.delegate respondsToSelector:@selector(headerViewSizeInInWaterFlowLayout:indexPath:)]){
-            UICollectionViewLayoutAttributes * headerAttr =[self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForItem:0 inSection:sec]];
-            [self.attrsArray addObject:headerAttr];
+            if ([self.delegate respondsToSelector:@selector(headerViewSizeInInWaterFlowLayout:indexPath:)]) {
+                CGSize headerSize = [self.delegate headerViewSizeInInWaterFlowLayout:self indexPath:[NSIndexPath indexPathForItem:0 inSection:sec]];
+                if ((headerSize.width > CGFLOAT_MIN) && (headerSize.height > CGFLOAT_MIN)) {
+                    UICollectionViewLayoutAttributes * headerAttr =[self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForItem:0 inSection:sec]];
+                    [self.attrsArray addObject:headerAttr];
+                }
+            }
         }
         //获取每一个sction中的cell的总h个数
         NSInteger rowNum = [self.collectionView numberOfItemsInSection:sec];
@@ -128,8 +133,13 @@ static const UIEdgeInsets JDefaultCellEdgInset = {10, 10, 10, 10};
         }
         //如果代理中实现了尾部视图的方法，则代表存在头部视图，那么需要把fotterview的attrs也添加进数组
         if([self.delegate respondsToSelector:@selector(footerViewSizeInInWaterFlowLayout:indexPath:)]){
-            UICollectionViewLayoutAttributes * footAttr = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter atIndexPath:[NSIndexPath indexPathForItem:0 inSection:sec]];
-            [self.attrsArray addObject:footAttr];
+            if ([self.delegate respondsToSelector:@selector(headerViewSizeInInWaterFlowLayout:indexPath:)]) {
+                CGSize footerSize = [self.delegate footerViewSizeInInWaterFlowLayout:self indexPath:[NSIndexPath indexPathForItem:0 inSection:sec]];
+                if ((footerSize.width > CGFLOAT_MIN) && (footerSize.height > CGFLOAT_MIN)) {
+                    UICollectionViewLayoutAttributes * footAttr = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter atIndexPath:[NSIndexPath indexPathForItem:0 inSection:sec]];
+                    [self.attrsArray addObject:footAttr];
+                }
+            }
         }
     }
     
